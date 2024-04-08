@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 
 namespace BMGEditor
@@ -212,22 +213,36 @@ namespace BMGEditor
 
             string ret = "";
             char c;
+            //List<string> escSeqs = new List<string>();
             while ((c = m_File.Reader.ReadChar()) != '\0')
             {
                 if (c == 0x001A)
                 {
+                    //string seq = "";
                     ret += "*" ;
+                    //seq += "001A";
                     escSeqLength = m_File.Reader.ReadByte();
+                    //seq += $"{String.Format("{0:X2}", escSeqLength)}";
                     ret += $"{String.Format("{0:X2}", escSeqLength)}";
                     for (int k = 3; k < escSeqLength; k++)
                     {
                         ret += String.Format("{0:X2}", m_File.Reader.ReadByte());
+                        //seq += ret[ret.Length - 2];
+                        //seq += ret[ret.Length - 1];
                     }
                     ret += " ";
+                    //escSeqs.Add(seq);
                 }
                 else
                     ret += c;
             }
+            /*using (StreamWriter outputFile = new StreamWriter("escape_sequences.txt", true))
+            {
+                foreach (string s in escSeqs)
+                {
+                    outputFile.WriteLine(s);
+                }
+            }*/
             return ret;
 
 
